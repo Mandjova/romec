@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROMEC — Tecnologia que funciona, sempre.</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+  :root {
+    --azul-profundo: #0A1628;
+    --azul-medio: #0F2545;
+    --ciano: #00C6FF;
+    --ciano-suave: #38D9FF;
+    --laranja: #FF6B35;
+    --branco: #F0F4FF;
+    --cinza-claro: #8A97B0;
+    --cartao: #111D33;
+    --borda: rgba(0,198,255,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--azul-profundo);
+    color: var(--branco);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 1rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,22,40,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--borda);
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem; font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--ciano);
+  }
+  .logo span { color: var(--laranja); }
+
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none; color: var(--cinza-claro);
+    font-size: 0.875rem; font-weight: 500; letter-spacing: 0.04em;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--ciano); }
+
+  .nav-cta {
+    background: var(--ciano); color: var(--azul-profundo) !important;
+    padding: 0.45rem 1.1rem; border-radius: 6px; font-weight: 600 !important;
+  }
+
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px; cursor: pointer; border: none; background: none;
+  }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--branco); border-radius: 2px; transition: .3s; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 2rem 4rem;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.06;
+    background-image:
+      linear-gradient(var(--ciano) 1px, transparent 1px),
+      linear-gradient(90deg, var(--ciano) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-glow {
+    position: absolute; top: 20%; right: -5%;
+    width: 50vw; height: 50vw;
+    background: radial-gradient(circle, rgba(0,198,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 1100px; margin: 0 auto; position: relative; z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(0,198,255,0.1); border: 1px solid var(--borda);
+    border-radius: 100px; padding: 0.35rem 1rem;
+    font-size: 0.8rem; color: var(--ciano); font-weight: 500; letter-spacing: 0.06em;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ciano); animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 em { font-style: normal; color: var(--ciano); }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--cinza-claro); max-width: 520px;
+    margin-bottom: 2.5rem; line-height: 1.7;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--ciano); color: var(--azul-profundo);
+    padding: 0.8rem 2rem; border-radius: 8px; font-weight: 700;
+    font-size: 0.95rem; text-decoration: none; display: inline-block;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 0 28px rgba(0,198,255,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,198,255,0.45); }
+
+  .btn-ghost {
+    border: 1px solid var(--borda); color: var(--branco);
+    padding: 0.8rem 2rem; border-radius: 8px; font-weight: 500;
+    font-size: 0.95rem; text-decoration: none; display: inline-block;
+    transition: border-color .2s, color .2s;
+  }
+  .btn-ghost:hover { border-color: var(--ciano); color: var(--ciano); }
+
+  .hero-stats {
+    display: flex; gap: 3rem; margin-top: 4rem; flex-wrap: wrap;
+  }
+  .stat-item { }
+  .stat-num {
+    font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800;
+    color: var(--ciano);
+  }
+  .stat-label { font-size: 0.8rem; color: var(--cinza-claro); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* SECTIONS */
+  section { padding: 5rem 2rem; }
+
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .eyebrow {
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ciano);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800; line-height: 1.15; margin-bottom: 1rem;
+  }
+
+  .section-desc {
+    color: var(--cinza-claro); max-width: 560px; line-height: 1.75; font-size: 0.97rem;
+    margin-bottom: 3rem;
+  }
+
+  /* SERVICES */
+  #servicos { background: var(--azul-medio); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .service-card {
+    background: var(--cartao); border: 1px solid var(--borda);
+    border-radius: 14px; padding: 2rem;
+    transition: border-color .3s, transform .3s;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--ciano), transparent);
+    opacity: 0; transition: opacity .3s;
+  }
+  .service-card:hover { border-color: rgba(0,198,255,0.4); transform: translateY(-4px); }
+  .service-card:hover::before { opacity: 1; }
+
+  .service-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(0,198,255,0.1); display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin-bottom: 1.25rem;
+  }
+
+  .service-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
+  .service-card p { color: var(--cinza-claro); font-size: 0.875rem; line-height: 1.65; }
+
+  .service-price {
+    margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--borda);
+    font-size: 0.8rem; color: var(--ciano); font-weight: 600;
+  }
+
+  /* SOBRE */
+  #sobre .section-inner {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+
+  .sobre-visual {
+    position: relative;
+  }
+
+  .sobre-card-big {
+    background: var(--cartao); border: 1px solid var(--borda);
+    border-radius: 18px; padding: 2.5rem;
+  }
+
+  .swot-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;
+  }
+
+  .swot-item {
+    border-radius: 10px; padding: 1rem;
+  }
+  .swot-item.forcas { background: rgba(0,198,255,0.08); border: 1px solid rgba(0,198,255,0.2); }
+  .swot-item.fraquezas { background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.2); }
+  .swot-item.oportunidades { background: rgba(56,217,255,0.08); border: 1px solid rgba(56,217,255,0.2); }
+  .swot-item.ameacas { background: rgba(255,100,100,0.08); border: 1px solid rgba(255,100,100,0.2); }
+
+  .swot-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .swot-item.forcas .swot-label, .swot-item.oportunidades .swot-label { color: var(--ciano); }
+  .swot-item.fraquezas .swot-label, .swot-item.ameacas .swot-label { color: var(--laranja); }
+
+  .swot-item p { font-size: 0.78rem; color: var(--cinza-claro); line-height: 1.55; }
+
+  /* EQUIPA */
+  #equipa { background: var(--azul-medio); }
+
+  .team-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem;
+  }
+
+  .team-card {
+    background: var(--cartao); border: 1px solid var(--borda);
+    border-radius: 14px; padding: 1.75rem; text-align: center;
+    transition: border-color .3s;
+  }
+  .team-card:hover { border-color: rgba(0,198,255,0.4); }
+
+  .team-avatar {
+    width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 1rem;
+    background: linear-gradient(135deg, var(--ciano), var(--laranja));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800;
+    color: var(--azul-profundo);
+  }
+
+  .team-card h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .team-card .cargo { font-size: 0.75rem; color: var(--ciano); font-weight: 500; margin-bottom: 0.5rem; }
+  .team-card .resp { font-size: 0.75rem; color: var(--cinza-claro); line-height: 1.5; }
+
+  /* FINANCEIRO */
+  #financeiro .section-inner { }
+
+  .fin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem; }
+
+  .fin-card {
+    background: var(--cartao); border: 1px solid var(--borda); border-radius: 14px; padding: 1.75rem;
+  }
+
+  .fin-card .label { font-size: 0.75rem; color: var(--cinza-claro); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+  .fin-card .value { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--ciano); }
+  .fin-card .sub { font-size: 0.78rem; color: var(--cinza-claro); margin-top: 0.3rem; }
+
+  .result-table { width: 100%; border-collapse: collapse; }
+  .result-table th {
+    text-align: left; font-size: 0.75rem; color: var(--cinza-claro);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--borda);
+  }
+  .result-table td {
+    padding: 0.75rem 1rem; font-size: 0.875rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .result-table tr:last-child td { border-bottom: none; font-weight: 700; color: var(--ciano); }
+  .result-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* CONTACTO */
+  #contacto { background: var(--azul-medio); }
+
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+
+  .contact-info { }
+  .contact-item { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem; }
+  .contact-ico {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: rgba(0,198,255,0.1); border: 1px solid var(--borda);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    font-size: 1.1rem;
+  }
+  .contact-item h4 { font-size: 0.8rem; color: var(--cinza-claro); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem; }
+  .contact-item p { font-size: 0.9rem; }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label { font-size: 0.8rem; color: var(--cinza-claro); font-weight: 500; }
+  .form-group input, .form-group textarea, .form-group select {
+    background: var(--cartao); border: 1px solid var(--borda); border-radius: 8px;
+    padding: 0.75rem 1rem; color: var(--branco); font-family: inherit; font-size: 0.9rem;
+    transition: border-color .2s; outline: none;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    border-color: var(--ciano);
+  }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-group select option { background: var(--azul-profundo); }
+
+  /* FOOTER */
+  footer {
+    padding: 2.5rem 2rem; border-top: 1px solid var(--borda);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+    max-width: 100%;
+  }
+  .footer-logo { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--ciano); }
+  .footer-logo span { color: var(--laranja); }
+  .footer-copy { font-size: 0.78rem; color: var(--cinza-claro); }
+  .footer-slogan { font-size: 0.8rem; color: var(--cinza-claro); font-style: italic; }
+
+  /* ROI BARS */
+  .roi-bars { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 2rem; }
+  .roi-row { display: flex; align-items: center; gap: 1rem; }
+  .roi-label { font-size: 0.78rem; color: var(--cinza-claro); width: 50px; flex-shrink: 0; }
+  .roi-bar-wrap { flex: 1; background: rgba(255,255,255,0.05); border-radius: 100px; height: 8px; overflow: hidden; }
+  .roi-bar { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--ciano), var(--ciano-suave)); }
+  .roi-val { font-size: 0.78rem; font-weight: 700; color: var(--ciano); width: 55px; text-align: right; flex-shrink: 0; }
+
+  /* DIVIDER */
+  .section-divider { border: none; border-top: 1px solid var(--borda); margin: 0; }
+
+  /* MOBILE NAV */
+  .mobile-menu {
+    display: none; flex-direction: column; gap: 0.5rem;
+    background: var(--azul-medio); padding: 1.5rem 2rem;
+    border-top: 1px solid var(--borda);
+    position: fixed; top: 61px; left: 0; right: 0; z-index: 99;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    text-decoration: none; color: var(--branco); font-size: 1rem;
+    padding: 0.5rem 0; border-bottom: 1px solid var(--borda);
+  }
+  .mobile-menu a:last-child { border-bottom: none; color: var(--ciano); font-weight: 600; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+
+    #sobre .section-inner { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 2rem; }
+    footer { flex-direction: column; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    section { padding: 3.5rem 1.25rem; }
+    nav { padding: 0.85rem 1.25rem; }
+    .swot-grid { grid-template-columns: 1fr; }
+    .result-table { font-size: 0.8rem; }
+    .result-table th, .result-table td { padding: 0.6rem 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">ROM<span>EC</span></div>
+  <ul class="nav-links">
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#equipa">Equipa</a></li>
+    <li><a href="#financeiro">Resultados</a></li>
+    <li><a href="#contacto" class="nav-cta">Contactar</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#servicos" onclick="toggleMenu()">Serviços</a>
+  <a href="#sobre" onclick="toggleMenu()">Sobre</a>
+  <a href="#equipa" onclick="toggleMenu()">Equipa</a>
+  <a href="#financeiro" onclick="toggleMenu()">Resultados</a>
+  <a href="#contacto" onclick="toggleMenu()">Contactar</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">Moçâmedes · Namibe · Angola</div>
+    <h1>Reparação.<br>Manutenção.<br><em>Otimização.</em></h1>
+    <p class="hero-sub">
+      A ROMEC é a sua parceira tecnológica de confiança em Moçâmedes.
+      Soluções rápidas, fiáveis e a preços competitivos para empresas, escolas e particulares.
+    </p>
+    <div class="hero-actions">
+      <a href="#contacto" class="btn-primary">Pedir Orçamento</a>
+      <a href="#servicos" class="btn-ghost">Ver Serviços</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Técnicos Especializados</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">6+</div>
+        <div class="stat-label">Tipos de Serviço</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">112%</div>
+        <div class="stat-label">ROI no 1.º Ano</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SERVIÇOS -->
+<section id="servicos">
+  <div class="section-inner">
+    <p class="eyebrow">O que fazemos</p>
+    <h2 class="section-title">Serviços Técnicos<br>de Excelência</h2>
+    <p class="section-desc">
+      Da reparação urgente à manutenção preventiva periódica — cobrimos todo o ciclo de vida do seu equipamento informático.
+    </p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🔧</div>
+        <h3>Reparação de Hardware</h3>
+        <p>Diagnóstico e reparação de placas-mãe, ecrãs, fontes de alimentação, discos e periféricos. Intervenção rápida com peças de qualidade.</p>
+        <div class="service-price">A partir de AOA 15.000</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💻</div>
+        <h3>Reparação de Software</h3>
+        <p>Instalação e reinstalação de sistemas operativos, remoção de vírus e malware, configuração de software e resolução de erros.</p>
+        <div class="service-price">A partir de AOA 8.000</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🛡️</div>
+        <h3>Manutenção Preventiva</h3>
+        <p>Contratos mensais de manutenção para empresas. Limpeza física, actualizações, backups e optimização de desempenho.</p>
+        <div class="service-price">A partir de AOA 12.000 / mês</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💾</div>
+        <h3>Recuperação de Dados</h3>
+        <p>Recuperação de ficheiros perdidos em discos danificados, cartões de memória, pens e outros dispositivos de armazenamento.</p>
+        <div class="service-price">A partir de AOA 20.000</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🌐</div>
+        <h3>Redes e Sistemas</h3>
+        <p>Instalação e configuração de redes locais (LAN/Wi-Fi), servidores, sistemas de segurança e infraestruturas de TI.</p>
+        <div class="service-price">A partir de AOA 25.000</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🚗</div>
+        <h3>Atendimento ao Domicílio</h3>
+        <p>Deslocação às instalações do cliente em Moçâmedes. Intervenção no local, sem necessidade de transportar o equipamento.</p>
+        <div class="service-price">Consulte disponibilidade</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="section-inner">
+    <div class="sobre-text">
+      <p class="eyebrow">Quem somos</p>
+      <h2 class="section-title">Uma empresa angolana, construída para durar</h2>
+      <p style="color: var(--cinza-claro); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1.5rem;">
+        Fundada em 2026 em Moçâmedes, a ROMEC surge para responder à crescente procura por serviços técnicos de qualidade no mercado regional do Namibe. O nosso slogan resume a nossa promessa:
+      </p>
+      <blockquote style="border-left: 3px solid var(--ciano); padding-left: 1.25rem; margin-bottom: 2rem;">
+        <p style="font-family:'Syne',sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--branco);">"Tecnologia que funciona — sempre."</p>
+      </blockquote>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:2rem;">
+        <div style="background:var(--cartao); border:1px solid var(--borda); border-radius:12px; padding:1.25rem;">
+          <div style="font-size:0.7rem; color:var(--cinza-claro); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.35rem;">Missão</div>
+          <p style="font-size:0.85rem; line-height:1.6;">Fornecer soluções tecnológicas acessíveis e de excelência a empresas e particulares.</p>
+        </div>
+        <div style="background:var(--cartao); border:1px solid var(--borda); border-radius:12px; padding:1.25rem;">
+          <div style="font-size:0.7rem; color:var(--cinza-claro); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.35rem;">Visão</div>
+          <p style="font-size:0.85rem; line-height:1.6;">Ser referência nacional em manutenção informática até 2030.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sobre-visual">
+      <div class="sobre-card-big">
+        <p style="font-size:0.75rem; color:var(--cinza-claro); text-transform:uppercase; letter-spacing:.1em; margin-bottom:1rem; font-weight:600;">Análise SWOT</p>
+        <div class="swot-grid">
+          <div class="swot-item forcas">
+            <div class="swot-label">Forças</div>
+            <p>Equipa qualificada · Preços competitivos · Atendimento personalizado · Formalização jurídica</p>
+          </div>
+          <div class="swot-item fraquezas">
+            <div class="swot-label">Fraquezas</div>
+            <p>Capital inicial limitado · Marca em construção · Carteira de clientes a crescer</p>
+          </div>
+          <div class="swot-item oportunidades">
+            <div class="swot-label">Oportunidades</div>
+            <p>Crescimento digital em Angola · Poucas empresas formalizadas no sector</p>
+          </div>
+          <div class="swot-item ameacas">
+            <div class="swot-label">Ameaças</div>
+            <p>Concorrência informal · Variação cambial nos componentes importados</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- EQUIPA -->
+<section id="equipa">
+  <div class="section-inner">
+    <p class="eyebrow">As pessoas por trás da ROMEC</p>
+    <h2 class="section-title">A Nossa Equipa</h2>
+    <p class="section-desc">Cinco fundadores com formação técnica em informática, unidos por um objectivo comum: transformar o mercado tecnológico do Namibe.</p>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">IS</div>
+        <h3>Ilda dos Santos</h3>
+        <div class="cargo">Directora Geral</div>
+        <p class="resp">Gestão geral, relações institucionais e estratégia corporativa.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">GA</div>
+        <h3>Giovany Agostinho</h3>
+        <div class="cargo">Director Técnico</div>
+        <p class="resp">Supervisão das reparações e controlo de qualidade técnica.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">SC</div>
+        <h3>Sabino Chivinda</h3>
+        <div class="cargo">Técnico Sénior</div>
+        <p class="resp">Reparação de hardware, diagnóstico avançado e manutenção.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">AF</div>
+        <h3>Arenid Fernandez</h3>
+        <div class="cargo">Técnico de Software</div>
+        <p class="resp">Instalação de sistemas, recuperação de dados e segurança informática.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">AC</div>
+        <h3>Antonio Cahalla</h3>
+        <div class="cargo">Dir. Comercial / Marketing</div>
+        <p class="resp">Vendas, marketing digital, atendimento e fidelização do cliente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- FINANCEIRO -->
+<section id="financeiro">
+  <div class="section-inner">
+    <p class="eyebrow">Viabilidade & Resultados</p>
+    <h2 class="section-title">Um negócio sólido,<br>com retorno comprovado</h2>
+    <p class="section-desc">Os indicadores financeiros demonstram a robustez do modelo de negócio da ROMEC, com recuperação do investimento prevista no primeiro ano de actividade.</p>
+
+    <div class="fin-grid">
+      <div class="fin-card">
+        <div class="label">Capital Inicial</div>
+        <div class="value">AOA 2,5M</div>
+        <div class="sub">5 sócios · AOA 300.000 cada + empréstimo</div>
+      </div>
+      <div class="fin-card">
+        <div class="label">Receita Anual (Ano 1)</div>
+        <div class="value">AOA 10,8M</div>
+        <div class="sub">AOA 900.000 mensais previstos</div>
+      </div>
+      <div class="fin-card">
+        <div class="label">Lucro Líquido (Ano 1)</div>
+        <div class="value">AOA 2,8M</div>
+        <div class="sub">Margem de 26,1% sobre as receitas</div>
+      </div>
+      <div class="fin-card">
+        <div class="label">Payback do Investimento</div>
+        <div class="value">~10,7 meses</div>
+        <div class="sub">Baixo risco, alta atractividade</div>
+      </div>
+    </div>
+
+    <div style="background:var(--cartao); border:1px solid var(--borda); border-radius:16px; padding:2rem; margin-bottom:2rem;">
+      <p style="font-size:0.75rem; color:var(--cinza-claro); text-transform:uppercase; letter-spacing:.1em; margin-bottom:.5rem; font-weight:600;">Retorno sobre o Investimento (ROI)</p>
+      <p style="font-size:0.8rem; color:var(--cinza-claro); margin-bottom:1.25rem;">Crescimento consistente ao longo dos 3 primeiros anos</p>
+      <div class="roi-bars">
+        <div class="roi-row">
+          <div class="roi-label">Ano 1</div>
+          <div class="roi-bar-wrap"><div class="roi-bar" style="width: 34%"></div></div>
+          <div class="roi-val">112,6%</div>
+        </div>
+        <div class="roi-row">
+          <div class="roi-label">Ano 2</div>
+          <div class="roi-bar-wrap"><div class="roi-bar" style="width: 67%"></div></div>
+          <div class="roi-val">222,0%</div>
+        </div>
+        <div class="roi-row">
+          <div class="roi-label">Ano 3</div>
+          <div class="roi-bar-wrap"><div class="roi-bar" style="width: 100%"></div></div>
+          <div class="roi-val">329,4%</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--cartao); border:1px solid var(--borda); border-radius:16px; padding:2rem; overflow-x:auto;">
+      <p style="font-size:0.75rem; color:var(--cinza-claro); text-transform:uppercase; letter-spacing:.1em; margin-bottom:1.25rem; font-weight:600;">Demonstração de Resultados Previsional</p>
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th>Indicador</th>
+            <th class="num">Ano 1 (AOA)</th>
+            <th class="num">Ano 2 (AOA)</th>
+            <th class="num">Ano 3 (AOA)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Receitas Totais</td>
+            <td class="num">10.800.000</td>
+            <td class="num">14.400.000</td>
+            <td class="num">18.000.000</td>
+          </tr>
+          <tr>
+            <td>(–) Custos Variáveis</td>
+            <td class="num">1.800.000</td>
+            <td class="num">2.340.000</td>
+            <td class="num">2.916.000</td>
+          </tr>
+          <tr>
+            <td>(–) Custos Fixos</td>
+            <td class="num">960.000</td>
+            <td class="num">1.008.000</td>
+            <td class="num">1.058.400</td>
+          </tr>
+          <tr>
+            <td>(–) Mão de Obra</td>
+            <td class="num">4.200.000</td>
+            <td class="num">4.410.000</td>
+            <td class="num">4.630.500</td>
+          </tr>
+          <tr>
+            <td>(–) Impostos + Juros</td>
+            <td class="num">524.000</td>
+            <td class="num">592.000</td>
+            <td class="num">660.000</td>
+          </tr>
+          <tr>
+            <td><strong>Lucro Líquido</strong></td>
+            <td class="num"><strong>2.816.000</strong></td>
+            <td class="num"><strong>5.550.000</strong></td>
+            <td class="num"><strong>8.235.100</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="section-inner">
+    <p class="eyebrow">Fale Connosco</p>
+    <h2 class="section-title">Pronto para resolver<br>o seu problema?</h2>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p style="color:var(--cinza-claro); font-size:0.95rem; line-height:1.75; margin-bottom:2rem;">
+          Entre em contacto connosco e receba um diagnóstico e orçamento rápido, sem compromisso. Atendemos em loja, ao domicílio e via WhatsApp.
+        </p>
+        <div class="contact-item">
+          <div class="contact-ico">📍</div>
+          <div>
+            <h4>Localização</h4>
+            <p>Moçâmedes, Província do Namibe, Angola</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-ico">📱</div>
+          <div>
+            <h4>WhatsApp Business</h4>
+            <p>Disponível · Resposta rápida</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-ico">🕐</div>
+          <div>
+            <h4>Horário</h4>
+            <p>Segunda a Sábado · 08h00 – 18h00</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-ico">📣</div>
+          <div>
+            <h4>Redes Sociais</h4>
+            <p>Facebook · Instagram · WhatsApp</p>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem; background:rgba(0,198,255,0.07); border:1px solid var(--borda); border-radius:12px; padding:1.25rem;">
+          <p style="font-size:0.82rem; color:var(--ciano); font-weight:600; margin-bottom:.3rem;">🎉 Oferta de Lançamento</p>
+          <p style="font-size:0.82rem; color:var(--cinza-claro); line-height:1.55;">20% de desconto em todos os serviços nos primeiros 3 meses. Aproveite agora!</p>
+        </div>
+      </div>
+
+      <form class="contact-form" onsubmit="enviarForm(event)">
+        <div class="form-group">
+          <label>Nome completo</label>
+          <input type="text" placeholder="O seu nome" required>
+        </div>
+        <div class="form-group">
+          <label>Telemóvel / WhatsApp</label>
+          <input type="tel" placeholder="+244 9XX XXX XXX" required>
+        </div>
+        <div class="form-group">
+          <label>Tipo de Serviço</label>
+          <select>
+            <option value="">Seleccione um serviço</option>
+            <option>Reparação de Hardware</option>
+            <option>Reparação de Software</option>
+            <option>Manutenção Preventiva</option>
+            <option>Recuperação de Dados</option>
+            <option>Instalação de Redes</option>
+            <option>Atendimento ao Domicílio</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Descreva o problema</label>
+          <textarea placeholder="Descreva brevemente o problema com o seu equipamento..."></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="border:none; cursor:pointer; font-family:inherit; width:100%;">Enviar Pedido</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ROM<span>EC</span></div>
+  <div class="footer-slogan">"Tecnologia que funciona — sempre."</div>
+  <div class="footer-copy">© 2026 ROMEC · Moçâmedes, Namibe, Angola</div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('open');
+  }
+
+  function enviarForm(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = '✓ Pedido enviado!';
+    btn.style.background = '#00b37a';
+    setTimeout(() => {
+      btn.textContent = 'Enviar Pedido';
+      btn.style.background = '';
+    }, 3000);
+  }
+
+  // Smooth scroll offset for fixed nav
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        window.scrollTo({ top: target.offsetTop - 70, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
